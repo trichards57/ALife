@@ -1,24 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel;
 using System.Numerics;
-using System.Security;
-using System.Text;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace ALife.Model
 {
-    internal class Engine
+    internal class Engine : INotifyPropertyChanged
     {
         private const int InitialRobotCount = 10;
         private const float WallCollisionLoss = 0.02f;
-        private readonly Random _random = new Random();
+        private readonly Timer cyclePerSecondTimer;
+        private readonly Random random = new Random();
+        private int cyclesLastSecond = 0;
+        private int cyclesPerSecond;
         private bool shouldStop = false;
 
         public Engine()
         {
+            cyclePerSecondTimer = new Timer(CyclePerSecondTick, null, -1, 1000);
+
             Field.Size = new Vector2(1000, 1000);
 
             for (var i = 0; i < InitialRobotCount; i++)
@@ -26,24 +29,32 @@ namespace ALife.Model
                 Bots.Add(new Bot
                 {
                     Position = new Vector2(
-                        (float)_random.NextDouble() * Field.Size.X,
-                        (float)_random.NextDouble() * Field.Size.Y),
+                        (float)random.NextDouble() * Field.Size.X,
+                        (float)random.NextDouble() * Field.Size.Y),
                     Speed = new Vector2(
-                        (float)_random.NextDouble() * 10,
-                        (float)_random.NextDouble() * 10)
+                        (float)random.NextDouble() * 10,
+                        (float)random.NextDouble() * 10)
                 });
             }
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public List<Bot> Bots { get; } = new List<Bot>();
+
         public Func<List<Bot>, Task> CycleCallback { get; set; }
+
+        public int CyclesPerSecond { get => cyclesPerSecond; private set { cyclesPerSecond = value; RaiseOnPropertyChanged(); } }
+
         public Field Field { get; } = new Field();
+
         public bool IsStopped { get; set; }
 
         public async Task RunCycle()
         {
             shouldStop = false;
             IsStopped = false;
+            cyclePerSecondTimer.Change(0, 1000);
 
             while (!shouldStop)
             {
@@ -53,15 +64,29 @@ namespace ALife.Model
                     UpdatePosition(b);
                 });
 
+                cyclesLastSecond++;
+
                 await CycleCallback(Bots);
             }
 
+            cyclePerSecondTimer.Change(-1, 1000);
             IsStopped = true;
         }
 
         public void StopCycle()
         {
             shouldStop = true;
+        }
+
+        private void CyclePerSecondTick(object state)
+        {
+            CyclesPerSecond = cyclesLastSecond;
+            cyclesLastSecond = 0;
+        }
+
+        private void RaiseOnPropertyChanged([CallerMemberName] string property = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
 
         private void UpdatePosition(Bot bot)

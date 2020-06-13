@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ALife"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <DockPanel>
@@ -15,6 +14,14 @@
                 <Image Source="Media/Stop_16x.png" />
             </Button>
         </ToolBar>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem x:Name="CyclesPerSecondDisplay">
+                <Span>
+                    <Run>Cycles per Second :</Run>
+                    <Run Text="{Binding CyclesPerSecond, Mode=OneWay}" />
+                </Span>
+            </StatusBarItem>
+        </StatusBar>
         <Viewbox Stretch="Fill">
             <Canvas Name="MainCanvas">
             </Canvas>
