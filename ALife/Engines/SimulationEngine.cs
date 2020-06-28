@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALife.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Numerics;
@@ -6,9 +7,9 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ALife.Model
+namespace ALife.Engines
 {
-    internal class Engine : INotifyPropertyChanged
+    internal class SimulationEngine : INotifyPropertyChanged
     {
         private const int InitialRobotCount = 10;
         private const float WallCollisionLoss = 0.02f;
@@ -18,7 +19,7 @@ namespace ALife.Model
         private int cyclesPerSecond;
         private bool shouldStop = false;
 
-        public Engine()
+        public SimulationEngine()
         {
             cyclePerSecondTimer = new Timer(CyclePerSecondTick, null, -1, 1000);
 
