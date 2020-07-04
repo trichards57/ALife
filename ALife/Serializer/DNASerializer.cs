@@ -4,9 +4,9 @@ using System.IO;
 
 namespace ALife.Serializer
 {
-    public class DNASerializer
+    public static class DNASerializer
     {
-        public List<BasePair> DeserializeDNA(string filename)
+        public static List<BasePair> DeserializeDNA(string filename)
         {
             try
             {
@@ -35,7 +35,8 @@ namespace ALife.Serializer
                         var basePair = ParseBasicCommand(p)
                             ?? ParseStoreCommand(p)
                             ?? ParseFlowCommand(p)
-                            ?? ParseVariable(p);
+                            ?? ParseVariable(p)
+                            ?? ParseConditionCommand(p);
 
                         if (basePair != null)
                             result.Add(basePair);
@@ -64,12 +65,30 @@ namespace ALife.Serializer
             return null;
         }
 
+        private static BasePair ParseConditionCommand(string command)
+        {
+            if (command.Equals("<", System.StringComparison.InvariantCultureIgnoreCase))
+                return new BasePair(BasePairType.Condition, (int)ConditionCommand.LessThan);
+            if (command.Equals(">", System.StringComparison.InvariantCultureIgnoreCase))
+                return new BasePair(BasePairType.Condition, (int)ConditionCommand.GreaterThan);
+            if (command.Equals("=", System.StringComparison.InvariantCultureIgnoreCase))
+                return new BasePair(BasePairType.Condition, (int)ConditionCommand.Equals);
+            if (command.Equals("=", System.StringComparison.InvariantCultureIgnoreCase))
+                return new BasePair(BasePairType.Condition, (int)ConditionCommand.Equals);
+            if (command.Equals("!=", System.StringComparison.InvariantCultureIgnoreCase))
+                return new BasePair(BasePairType.Condition, (int)ConditionCommand.NotEquals);
+
+            return null;
+        }
+
         private static BasePair ParseFlowCommand(string command)
         {
             if (command.Equals("start", System.StringComparison.InvariantCultureIgnoreCase))
                 return new BasePair(BasePairType.Flow, (int)FlowCommand.Start);
             if (command.Equals("stop", System.StringComparison.InvariantCultureIgnoreCase))
                 return new BasePair(BasePairType.Flow, (int)FlowCommand.Stop);
+            if (command.Equals("cond", System.StringComparison.InvariantCultureIgnoreCase))
+                return new BasePair(BasePairType.Flow, (int)FlowCommand.Condition);
 
             return null;
         }

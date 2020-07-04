@@ -46,7 +46,7 @@ namespace ALife.Engines
                         (float)random.NextDouble() * Field.Size.X,
                         (float)random.NextDouble() * Field.Size.Y),
                     Speed = new Vector2(0, 0),
-                    DNA = serializer.DeserializeDNA("test-dna.txt"),
+                    DNA = DNASerializer.DeserializeDNA("test-dna.txt"),
                     Orientation = (float)(random.NextDouble() * Math.PI * 2),
                     Color = Colors.Red
                 });
@@ -60,7 +60,7 @@ namespace ALife.Engines
                     (float)random.NextDouble() * Field.Size.X,
                     (float)random.NextDouble() * Field.Size.Y),
                     Speed = new Vector2(0, 0),
-                    DNA = serializer.DeserializeDNA("test-dna-2.txt"),
+                    DNA = DNASerializer.DeserializeDNA("test-dna-2.txt"),
                     Orientation = (float)(random.NextDouble() * Math.PI * 2),
                     Color = Colors.Green
                 });

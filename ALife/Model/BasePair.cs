@@ -9,7 +9,8 @@ namespace ALife.Model
         Store = 2,
         Number = 3,
         StarNumber = 4,
-        Flow = 5
+        Flow = 5,
+        Condition = 6
     }
 
     public enum BasicCommand
@@ -21,11 +22,21 @@ namespace ALife.Model
         Divide = 4,
     }
 
+    public enum ConditionCommand
+    {
+        Unknown = 0,
+        LessThan = 1,
+        GreaterThan = 2,
+        Equals = 3,
+        NotEquals = 4
+    }
+
     public enum FlowCommand
     {
         Unknown = 0,
         Start = 1,
-        Stop = 2
+        Stop = 2,
+        Condition = 3
     }
 
     public enum StoreCommand
@@ -51,6 +62,14 @@ namespace ALife.Model
                 return (BasicCommand)Command;
 
             return BasicCommand.Unknown;
+        }
+
+        public ConditionCommand GetConditionCommand()
+        {
+            if (Enum.IsDefined(typeof(ConditionCommand), Command))
+                return (ConditionCommand)Command;
+
+            return ConditionCommand.Unknown;
         }
 
         public FlowCommand GetFlowCommand()
