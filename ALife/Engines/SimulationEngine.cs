@@ -44,9 +44,7 @@ namespace ALife.Engines
                     Position = new Vector2(
                         (float)random.NextDouble() * Field.Size.X,
                         (float)random.NextDouble() * Field.Size.Y),
-                    Speed = new Vector2(
-                        (float)random.NextDouble() * 10,
-                        (float)random.NextDouble() * 10),
+                    Speed = new Vector2(0, 0),
                     DNA = serializer.DeserializeDNA("test-dna.txt"),
                     Orientation = (float)(random.NextDouble() * Math.PI * 2)
                 });

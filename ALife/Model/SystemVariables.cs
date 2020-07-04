@@ -6,7 +6,7 @@ namespace ALife.Model
 {
     public static class SystemVariables
     {
-        public static readonly int MemoryLength = Enum.GetValues(typeof(MemoryAddresses)).Cast<int>().Max();
+        public static readonly int MemoryLength = Enum.GetValues(typeof(MemoryAddresses)).Cast<int>().Max() + 1;
 
         public static Dictionary<string, int> Variables { get; }
             = new Dictionary<string, int>
@@ -24,7 +24,7 @@ namespace ALife.Model
             if (address == 0)
                 return 0;
 
-            var actual = (Math.Abs(address) + 1) % MemoryLength - 1;
+            var actual = Math.Abs(address) % MemoryLength;
 
             if (actual == 0)
                 return MemoryLength;

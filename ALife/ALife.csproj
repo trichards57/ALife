@@ -56,6 +56,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Engines\Helpers.cs" />
     <Compile Include="Engines\RuntimeEngine.cs" />
     <Compile Include="Engines\PhysicsEngine.cs" />
     <Compile Include="Engines\SafeStack.cs" />

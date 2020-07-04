@@ -29,6 +29,16 @@ namespace ALife.Tests.Model
         }
 
         [Fact]
+        public void NormaliseAddressHandlesSecondLargestValue()
+        {
+            var testAddress = SystemVariables.MemoryLength - 1;
+
+            var actualAddress = SystemVariables.NormaliseAddress(testAddress);
+
+            Assert.Equal(testAddress, actualAddress);
+        }
+
+        [Fact]
         public void NormaliseAddressHandlesSmallAddress()
         {
             var testAddress = 2;
