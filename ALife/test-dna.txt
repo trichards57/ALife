@@ -1,0 +1,3 @@
+﻿start
+  5 .up store
+stop

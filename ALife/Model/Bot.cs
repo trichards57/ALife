@@ -11,6 +11,7 @@ namespace ALife.Model
         public Vector2 Force { get; set; }
         public float Mass { get; set; } = 10;
         public IList<int> Memory { get; } = new int[SystemVariables.MemoryLength];
+        public float Orientation { get; set; }
         public Vector2 Position { get; set; }
         public IReadOnlyList<int> PreviousMemory { get; private set; }
         public float Radius { get; set; } = 10;

@@ -1,4 +1,5 @@
 ﻿using ALife.Model;
+using ALife.Serializer;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,7 +13,16 @@ namespace ALife.Engines
     internal class SimulationEngine : INotifyPropertyChanged
     {
         private const int InitialRobotCount = 10;
-        private const float WallCollisionLoss = 0.02f;
+
+        [ThreadStatic]
+        private static DNAEngine dnaEngine;
+
+        [ThreadStatic]
+        private static PhysicsEngine physicsEngine;
+
+        [ThreadStatic]
+        private static RuntimeEngine runtimeEngine;
+
         private readonly Timer cyclePerSecondTimer;
         private readonly Random random = new Random();
         private int cyclesLastSecond = 0;
@@ -25,6 +35,8 @@ namespace ALife.Engines
 
             Field.Size = new Vector2(1000, 1000);
 
+            var serializer = new DNASerializer();
+
             for (var i = 0; i < InitialRobotCount; i++)
             {
                 Bots.Add(new Bot
@@ -34,7 +46,9 @@ namespace ALife.Engines
                         (float)random.NextDouble() * Field.Size.Y),
                     Speed = new Vector2(
                         (float)random.NextDouble() * 10,
-                        (float)random.NextDouble() * 10)
+                        (float)random.NextDouble() * 10),
+                    DNA = serializer.DeserializeDNA("test-dna.txt"),
+                    Orientation = (float)(random.NextDouble() * Math.PI * 2)
                 });
             }
         }
@@ -61,8 +75,26 @@ namespace ALife.Engines
             {
                 Parallel.ForEach(Bots, b =>
                 {
-                    UpdateSpeed(b);
-                    UpdatePosition(b);
+                    if (dnaEngine == null)
+                        dnaEngine = new DNAEngine();
+
+                    dnaEngine.ExecuteDNA(b);
+                });
+
+                Parallel.ForEach(Bots, b =>
+                {
+                    if (runtimeEngine == null)
+                        runtimeEngine = new RuntimeEngine();
+
+                    runtimeEngine.UpdateBot(b);
+                });
+
+                Parallel.ForEach(Bots, b =>
+                {
+                    if (physicsEngine == null)
+                        physicsEngine = new PhysicsEngine(Field);
+
+                    physicsEngine.UpdateBot(b);
                 });
 
                 cyclesLastSecond++;
@@ -88,31 +120,6 @@ namespace ALife.Engines
         private void RaiseOnPropertyChanged([CallerMemberName] string property = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
-
-        private void UpdatePosition(Bot bot)
-        {
-            var radiusVector = new Vector2(bot.Radius / 2, bot.Radius / 2);
-            bot.Position = bot.Speed + bot.Position;
-
-            var wallForceX = 0.0f;
-            var wallForceY = 0.0f;
-
-            if (bot.Position.X <= bot.Radius / 2 || bot.Position.X >= Field.Size.X - bot.Radius / 2)
-                wallForceX = -(2 - WallCollisionLoss) * bot.Speed.X * bot.Mass;
-            if (bot.Position.Y <= bot.Radius / 2 || bot.Position.Y >= Field.Size.Y - bot.Radius / 2)
-                wallForceY = -(2 - WallCollisionLoss) * bot.Speed.Y * bot.Mass;
-
-            bot.Force += new Vector2(wallForceX, wallForceY);
-
-            bot.Position = Vector2.Clamp(bot.Position, radiusVector, Field.Size - radiusVector);
-        }
-
-        private void UpdateSpeed(Bot bot)
-        {
-            bot.Speed += bot.Force / bot.Mass;
-
-            bot.Force = Vector2.Zero;
         }
     }
 }

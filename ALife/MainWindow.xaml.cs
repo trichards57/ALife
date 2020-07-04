@@ -1,4 +1,5 @@
-﻿using ALife.Model;
+﻿using ALife.Engines;
+using ALife.Model;
 using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
@@ -10,7 +11,7 @@ namespace ALife
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly Engine engine;
+        private readonly SimulationEngine engine;
         private readonly Renderer renderer;
 
         public MainWindow()
@@ -18,7 +19,7 @@ namespace ALife
             InitializeComponent();
 
             renderer = new Renderer(MainCanvas);
-            engine = new Engine()
+            engine = new SimulationEngine()
             {
                 CycleCallback = renderer.DrawBots
             };

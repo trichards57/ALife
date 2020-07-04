@@ -56,10 +56,13 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Engines\RuntimeEngine.cs" />
+    <Compile Include="Engines\PhysicsEngine.cs" />
     <Compile Include="Engines\SafeStack.cs" />
     <Compile Include="Model\BasePair.cs" />
     <Compile Include="Engines\DNAEngine.cs" />
     <Compile Include="Model\MemoryAddresses.cs" />
+    <Compile Include="Model\SystemVariables.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="Serializer\DNASerializer.cs" />
     <Page Include="MainWindow.xaml">
@@ -107,6 +110,11 @@
   <ItemGroup>
     <Resource Include="Media\Run_16x.png" />
     <Resource Include="Media\Stop_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="test-dna.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
