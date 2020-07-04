@@ -31,9 +31,7 @@ namespace ALife.Engines
 
                     case BasePairType.StarNumber:
                         if (currentFlowState != FlowState.Clear)
-                        {
-                            IntStack.Push(bot.Memory[CommandToAddress(basePair.Command)]);
-                        }
+                            IntStack.Push(bot.Memory[SystemVariables.NormaliseAddress(basePair.Command)]);
                         break;
 
                     case BasePairType.Basic:
@@ -49,11 +47,6 @@ namespace ALife.Engines
                         break;
                 }
             }
-        }
-
-        private static int CommandToAddress(int command)
-        {
-            return Math.Abs(command % SystemVariables.MemoryLength) - 1;
         }
 
         private void ExecuteBasicCommand(BasicCommand command)
@@ -104,7 +97,7 @@ namespace ALife.Engines
             switch (storeCommand)
             {
                 case StoreCommand.Store:
-                    b = CommandToAddress(IntStack.Pop());
+                    b = SystemVariables.NormaliseAddress(IntStack.Pop());
                     a = IntStack.Pop();
                     bot.Memory[b] = a;
                     break;
