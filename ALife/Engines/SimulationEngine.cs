@@ -7,6 +7,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace ALife.Engines
 {
@@ -46,7 +47,22 @@ namespace ALife.Engines
                         (float)random.NextDouble() * Field.Size.Y),
                     Speed = new Vector2(0, 0),
                     DNA = serializer.DeserializeDNA("test-dna.txt"),
-                    Orientation = (float)(random.NextDouble() * Math.PI * 2)
+                    Orientation = (float)(random.NextDouble() * Math.PI * 2),
+                    Color = Colors.Red
+                });
+            }
+
+            for (var i = 0; i < InitialRobotCount; i++)
+            {
+                Bots.Add(new Bot
+                {
+                    Position = new Vector2(
+                    (float)random.NextDouble() * Field.Size.X,
+                    (float)random.NextDouble() * Field.Size.Y),
+                    Speed = new Vector2(0, 0),
+                    DNA = serializer.DeserializeDNA("test-dna-2.txt"),
+                    Orientation = (float)(random.NextDouble() * Math.PI * 2),
+                    Color = Colors.Green
                 });
             }
         }

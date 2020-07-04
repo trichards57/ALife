@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace ALife.Model
 {
     public class Bot
     {
+        public Color Color { get; set; }
         public List<BasePair> DNA { get; set; }
         public Ellipse Ellipse { get; set; }
         public Vector2 Force { get; set; }

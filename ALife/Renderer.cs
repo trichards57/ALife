@@ -1,10 +1,7 @@
 ﻿using ALife.Model;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -35,12 +32,12 @@ namespace ALife
                     {
                         Stroke = Brushes.Black,
                         StrokeThickness = 1,
-                        Fill = Brushes.Blue
                     };
 
                     canvas.Children.Add(b.Ellipse);
                 }
 
+                b.Ellipse.Fill = new SolidColorBrush(b.Color);
                 b.Ellipse.Width = b.Radius * 2;
                 b.Ellipse.Height = b.Radius * 2;
                 Canvas.SetLeft(b.Ellipse, b.Position.X - b.Radius);
