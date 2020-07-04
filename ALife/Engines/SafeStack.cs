@@ -22,6 +22,15 @@ namespace ALife.Engines
         {
             stack.Push(value);
         }
+
+        public bool Summarise()
+        {
+            var condition = true;
+            while (stack.Count > 0)
+                condition &= stack.Pop();
+
+            return condition;
+        }
     }
 
     internal class SafeIntStack

@@ -1,5 +1,4 @@
 ﻿using ALife.Model;
-using System;
 
 namespace ALife.Engines
 {
@@ -10,14 +9,18 @@ namespace ALife.Engines
         private enum FlowState
         {
             Clear = 0,
-            Body = 1
+            Body = 1,
+            Condition = 2
         }
 
+        private SafeBoolStack BoolStack { get; } = new SafeBoolStack();
         private SafeIntStack IntStack { get; } = new SafeIntStack();
 
         public void ExecuteDNA(Bot bot)
         {
+            BoolStack.Clear();
             IntStack.Clear();
+
             currentFlowState = FlowState.Clear;
 
             foreach (var basePair in bot.DNA)
@@ -35,15 +38,22 @@ namespace ALife.Engines
                         break;
 
                     case BasePairType.Basic:
-                        ExecuteBasicCommand(basePair.GetBasicCommand());
+                        if (currentFlowState != FlowState.Clear)
+                            ExecuteBasicCommand(basePair.GetBasicCommand());
                         break;
 
                     case BasePairType.Store:
-                        ExecuteStoreCommand(bot, basePair.GetStoreCommand());
+                        if (currentFlowState == FlowState.Body)
+                            ExecuteStoreCommand(bot, basePair.GetStoreCommand());
                         break;
 
                     case BasePairType.Flow:
                         ExecuteFlowCommand(basePair.GetFlowCommand());
+                        break;
+
+                    case BasePairType.Condition:
+                        if (currentFlowState != FlowState.Clear)
+                            ExecuteConditionCommand(basePair.GetConditionCommand());
                         break;
                 }
             }
@@ -83,11 +93,56 @@ namespace ALife.Engines
             }
         }
 
+        private void ExecuteConditionCommand(ConditionCommand command)
+        {
+            int a, b;
+
+            switch (command)
+            {
+                case ConditionCommand.LessThan:
+                    b = IntStack.Pop();
+                    a = IntStack.Pop();
+                    BoolStack.Push(a < b);
+                    break;
+
+                case ConditionCommand.GreaterThan:
+                    b = IntStack.Pop();
+                    a = IntStack.Pop();
+                    BoolStack.Push(a > b);
+                    break;
+
+                case ConditionCommand.Equals:
+                    b = IntStack.Pop();
+                    a = IntStack.Pop();
+                    BoolStack.Push(a == b);
+                    break;
+
+                case ConditionCommand.NotEquals:
+                    b = IntStack.Pop();
+                    a = IntStack.Pop();
+                    BoolStack.Push(a != b);
+                    break;
+            }
+        }
+
         private void ExecuteFlowCommand(FlowCommand flowCommand)
         {
-            currentFlowState = FlowState.Clear;
-            if (flowCommand == FlowCommand.Start)
-                currentFlowState = FlowState.Body;
+            switch (flowCommand)
+            {
+                case FlowCommand.Start:
+                    if (currentFlowState != FlowState.Condition || BoolStack.Summarise())
+                        currentFlowState = FlowState.Body;
+                    break;
+
+                case FlowCommand.Condition:
+                    currentFlowState = FlowState.Condition;
+                    BoolStack.Clear();
+                    break;
+
+                default:
+                    currentFlowState = FlowState.Clear;
+                    break;
+            }
         }
 
         private void ExecuteStoreCommand(Bot bot, StoreCommand storeCommand)
