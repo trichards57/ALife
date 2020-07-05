@@ -154,7 +154,8 @@ namespace ALife.Engines
                 case StoreCommand.Store:
                     b = SystemVariables.NormaliseAddress(IntStack.Pop());
                     a = IntStack.Pop();
-                    bot.Memory[b] = a;
+                    if (SystemVariables.IsAddressWritable(b))
+                        bot.Memory[b] = a;
                     break;
             }
         }
