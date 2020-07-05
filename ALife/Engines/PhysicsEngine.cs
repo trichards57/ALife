@@ -1,14 +1,9 @@
 ﻿using ALife.Model;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ALife.Engines
 {
-    internal class PhysicsEngine
+    public class PhysicsEngine
     {
         private const float WallCollisionLoss = 0.02f;
         private readonly Field field;
