@@ -36,8 +36,6 @@ namespace ALife.Engines
 
             Field.Size = new Vector2(1000, 1000);
 
-            var serializer = new DNASerializer();
-
             for (var i = 0; i < InitialRobotCount; i++)
             {
                 Bots.Add(new Bot
@@ -109,6 +107,14 @@ namespace ALife.Engines
                         physicsEngine = new PhysicsEngine(Field);
 
                     physicsEngine.UpdateBot(b);
+                });
+
+                Parallel.ForEach(Bots, b =>
+                {
+                    if (runtimeEngine == null)
+                        runtimeEngine = new RuntimeEngine();
+
+                    runtimeEngine.UpdateMemory(b);
                 });
 
                 cyclesLastSecond++;
