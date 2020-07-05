@@ -19,6 +19,23 @@ namespace ALife.Model
                 {"turnright", (int)MemoryAddresses.TurnRight },
             };
 
+        public static bool IsAddressWritable(int address)
+        {
+            switch ((MemoryAddresses)address)
+            {
+                case MemoryAddresses.MoveUp:
+                case MemoryAddresses.MoveDown:
+                case MemoryAddresses.MoveLeft:
+                case MemoryAddresses.MoveRight:
+                case MemoryAddresses.TurnLeft:
+                case MemoryAddresses.TurnRight:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
         public static int NormaliseAddress(int address)
         {
             if (address == 0)
