@@ -1,0 +1,15 @@
+﻿Physics Definitions
+===================
+
+Coordinate frames
+-----------------
+
+* Origin - Top-Left corner
+* x-axis - Positive to the right
+* y-axis - Positive down
+* Orientation - Clockwise around the x-axis, 0 is aligned with x-axis
+
+Units
+-----
+
+Angle Integers - one full turn = 1000 units

@@ -8,5 +8,7 @@
         MoveRight = 4,
         TurnLeft = 5,
         TurnRight = 6,
+        SpeedForward = 7,
+        SpeedRight = 8,
     }
 }

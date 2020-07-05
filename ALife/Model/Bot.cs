@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -18,5 +19,20 @@ namespace ALife.Model
         public IReadOnlyList<int> PreviousMemory { get; private set; }
         public float Radius { get; set; } = 10;
         public Vector2 Speed { get; set; }
+
+        public int GetFromMemory(MemoryAddresses address)
+        {
+            return Memory[(int)address];
+        }
+
+        public void SetMemory(MemoryAddresses address, int value)
+        {
+            Memory[(int)address] = value;
+        }
+
+        public void SetMemory(MemoryAddresses address, float value)
+        {
+            Memory[(int)address] = (int)Math.Round(value);
+        }
     }
 }
