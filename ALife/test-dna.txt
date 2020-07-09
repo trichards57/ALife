@@ -1,4 +1,3 @@
 ﻿start
-  1 .up store
   10 .turnleft store
 stop
