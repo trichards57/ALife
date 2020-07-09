@@ -51,6 +51,11 @@ namespace ALife.Engines
                         ExecuteFlowCommand(basePair.GetFlowCommand());
                         break;
 
+                    case BasePairType.Boolean:
+                        if (currentFlowState != FlowState.Clear)
+                            ExecuteBooleanCommand(basePair.GetBooleanCommand());
+                        break;
+
                     case BasePairType.Condition:
                         if (currentFlowState != FlowState.Clear)
                             ExecuteConditionCommand(basePair.GetConditionCommand());
@@ -89,6 +94,32 @@ namespace ALife.Engines
                     b = IntStack.Pop();
                     a = IntStack.Pop();
                     IntStack.Push(a - b);
+                    break;
+            }
+        }
+
+        private void ExecuteBooleanCommand(BooleanCommand command)
+        {
+            bool a, b;
+
+            switch (command)
+            {
+                case BooleanCommand.And:
+                    b = BoolStack.Pop();
+                    a = BoolStack.Pop();
+                    BoolStack.Push(a & b);
+                    break;
+
+                case BooleanCommand.Or:
+                    b = BoolStack.Pop();
+                    a = BoolStack.Pop();
+                    BoolStack.Push(a | b);
+                    break;
+
+                case BooleanCommand.Xor:
+                    b = BoolStack.Pop();
+                    a = BoolStack.Pop();
+                    BoolStack.Push(a ^ b);
                     break;
             }
         }

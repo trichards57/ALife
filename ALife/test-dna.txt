@@ -1,3 +1,21 @@
-﻿start
+﻿cond
+  *.speedfwd 0 =
+  *.speedright 0 =
+start
+  10 .turnleft store
+  100 .up store
+stop
+
+cond
+  *.speedright 1 >
+  *.speedfwd 0 > and
+start
+  10 .turnright store
+stop
+
+cond
+  *.speedright -1 < 
+  *.speedfwd 0 < or
+start
   10 .turnleft store
 stop

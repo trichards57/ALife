@@ -17,6 +17,8 @@ namespace ALife.Model
                 {"right", (int)MemoryAddresses.MoveRight },
                 {"turnleft", (int)MemoryAddresses.TurnLeft },
                 {"turnright", (int)MemoryAddresses.TurnRight },
+                {"speedfwd", (int)MemoryAddresses.SpeedForward },
+                {"speedright", (int)MemoryAddresses.SpeedRight },
             };
 
         public static bool IsAddressWritable(int address)

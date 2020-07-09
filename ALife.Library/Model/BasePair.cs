@@ -10,7 +10,8 @@ namespace ALife.Model
         Number = 3,
         StarNumber = 4,
         Flow = 5,
-        Condition = 6
+        Condition = 6,
+        Boolean = 7
     }
 
     public enum BasicCommand
@@ -19,7 +20,15 @@ namespace ALife.Model
         Add = 1,
         Subtract = 2,
         Multiply = 3,
-        Divide = 4,
+        Divide = 4
+    }
+
+    public enum BooleanCommand
+    {
+        Unknown = 0,
+        And = 1,
+        Or = 2,
+        Xor = 3
     }
 
     public enum ConditionCommand
@@ -86,6 +95,41 @@ namespace ALife.Model
                 return (StoreCommand)Command;
 
             return StoreCommand.Unknown;
+        }
+
+        public override string ToString()
+        {
+            switch (Type)
+            {
+                case BasePairType.Basic:
+                    return GetBasicCommand().ToString();
+
+                case BasePairType.Condition:
+                    return GetConditionCommand().ToString();
+
+                case BasePairType.Flow:
+                    return GetFlowCommand().ToString();
+
+                case BasePairType.Number:
+                    return Command.ToString();
+
+                case BasePairType.StarNumber:
+                    return $"*{Command}";
+
+                case BasePairType.Store:
+                    return GetStoreCommand().ToString();
+
+                default:
+                    return "Unknown";
+            }
+        }
+
+        internal BooleanCommand GetBooleanCommand()
+        {
+            if (Enum.IsDefined(typeof(BooleanCommand), Command))
+                return (BooleanCommand)Command;
+
+            return BooleanCommand.Unknown;
         }
     }
 }

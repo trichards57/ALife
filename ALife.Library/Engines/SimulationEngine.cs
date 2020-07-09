@@ -12,6 +12,8 @@ namespace ALife.Engines
     public class SimulationEngine
     {
         private const int InitialRobotCount = 10;
+        private const int UpdateFrequency = 60; //Hz
+        private const int UpdatePeriod = 1000 / UpdateFrequency; // ms
 
         [ThreadStatic]
         private static DNAEngine dnaEngine;
@@ -96,6 +98,8 @@ namespace ALife.Engines
 
             while (!shouldStop)
             {
+                var startTime = DateTime.Now;
+
                 Parallel.ForEach(Bots, b =>
                 {
                     if (dnaEngine == null)
@@ -138,6 +142,13 @@ namespace ALife.Engines
                 botsToAdvertise.Clear();
                 if (CycleCallback != null)
                     await CycleCallback(Bots);
+
+                var endTime = DateTime.Now;
+
+                var interval = endTime - startTime;
+
+                if (interval < TimeSpan.FromMilliseconds(UpdatePeriod))
+                    await Task.Delay(UpdatePeriod - (int)interval.TotalMilliseconds);
             }
 
             cyclePerSecondTimer.Change(-1, 1000);

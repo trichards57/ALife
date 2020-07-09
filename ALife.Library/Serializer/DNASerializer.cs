@@ -35,8 +35,9 @@ namespace ALife.Serializer
                         var basePair = ParseBasicCommand(p)
                             ?? ParseStoreCommand(p)
                             ?? ParseFlowCommand(p)
-                            ?? ParseVariable(p)
-                            ?? ParseConditionCommand(p);
+                            ?? ParseConditionCommand(p)
+                            ?? ParseBooleanCommand(p)
+                            ?? ParseVariable(p);
 
                         if (basePair != null)
                             result.Add(basePair);
@@ -61,6 +62,18 @@ namespace ALife.Serializer
                 return new BasePair(BasePairType.Basic, (int)BasicCommand.Multiply);
             if (command.Equals("div", System.StringComparison.InvariantCultureIgnoreCase))
                 return new BasePair(BasePairType.Basic, (int)BasicCommand.Divide);
+
+            return null;
+        }
+
+        private static BasePair ParseBooleanCommand(string command)
+        {
+            if (command.Equals("and", System.StringComparison.InvariantCultureIgnoreCase))
+                return new BasePair(BasePairType.Boolean, (int)BooleanCommand.And);
+            if (command.Equals("or", System.StringComparison.InvariantCultureIgnoreCase))
+                return new BasePair(BasePairType.Boolean, (int)BooleanCommand.Or);
+            if (command.Equals("xor", System.StringComparison.InvariantCultureIgnoreCase))
+                return new BasePair(BasePairType.Boolean, (int)BooleanCommand.Xor);
 
             return null;
         }
