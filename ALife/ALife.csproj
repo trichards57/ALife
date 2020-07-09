@@ -37,7 +37,9 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -56,16 +58,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Engines\Helpers.cs" />
-    <Compile Include="Engines\RuntimeEngine.cs" />
-    <Compile Include="Engines\PhysicsEngine.cs" />
-    <Compile Include="Engines\SafeStack.cs" />
-    <Compile Include="Model\BasePair.cs" />
-    <Compile Include="Engines\DNAEngine.cs" />
-    <Compile Include="Model\MemoryAddresses.cs" />
-    <Compile Include="Model\SystemVariables.cs" />
     <Compile Include="Renderer.cs" />
-    <Compile Include="Serializer\DNASerializer.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -80,9 +73,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Bot.cs" />
-    <Compile Include="Engines\SimulationEngine.cs" />
-    <Compile Include="Model\Field.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -109,10 +99,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Media\Run_16x.png" />
-    <Resource Include="Media\Stop_16x.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="test-dna.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -124,6 +110,16 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Physics-Notes.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Media\Run_16x.png" />
+    <Resource Include="Media\Stop_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ALife.Library\ALife.Library.csproj">
+      <Project>{86dc2343-2732-4195-b4a2-9c54ddb6a158}</Project>
+      <Name>ALife.Library</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

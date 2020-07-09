@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Media\Run_16x.png" />
+    <None Remove="Media\Stop_16x.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Media\Run_16x.png" />
+    <Resource Include="Media\Stop_16x.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Numerics.Vectors" Version="4.5.0" />
+  </ItemGroup>
+
+</Project>

@@ -8,13 +8,47 @@ using System.Windows.Shapes;
 
 namespace ALife
 {
-    internal class Renderer
+    public class BotHolder
     {
+        private readonly Ellipse ellipse;
+
+        public BotHolder(Canvas canvas, Bot bot)
+        {
+            Bot = bot;
+            ellipse = new Ellipse
+            {
+                Stroke = Brushes.Black,
+                StrokeThickness = 1,
+            };
+
+            canvas.Children.Add(ellipse);
+        }
+
+        public Bot Bot { get; }
+
+        public void Update()
+        {
+            ellipse.Fill = new SolidColorBrush(Color.FromArgb(Bot.Color.A, Bot.Color.R, Bot.Color.G, Bot.Color.B));
+            ellipse.Width = Bot.Radius * 2;
+            ellipse.Height = Bot.Radius * 2;
+            Canvas.SetLeft(ellipse, Bot.Position.X - Bot.Radius);
+            Canvas.SetTop(ellipse, Bot.Position.Y - Bot.Radius);
+        }
+    }
+
+    public class Renderer
+    {
+        private readonly List<BotHolder> botHolders = new List<BotHolder>();
         private readonly Canvas canvas;
 
         public Renderer(Canvas canvas)
         {
             this.canvas = canvas;
+        }
+
+        public async Task AddBot(Bot bot)
+        {
+            await canvas.Dispatcher.BeginInvoke(new Action<Bot>(RegisterBot), bot);
         }
 
         public async Task DrawBots(IEnumerable<Bot> bots)
@@ -24,25 +58,15 @@ namespace ALife
 
         private void DrawBotsToCanvas(IEnumerable<Bot> bots)
         {
-            foreach (var b in bots)
+            foreach (var b in botHolders)
             {
-                if (b.Ellipse == null)
-                {
-                    b.Ellipse = new Ellipse
-                    {
-                        Stroke = Brushes.Black,
-                        StrokeThickness = 1,
-                    };
-
-                    canvas.Children.Add(b.Ellipse);
-                }
-
-                b.Ellipse.Fill = new SolidColorBrush(b.Color);
-                b.Ellipse.Width = b.Radius * 2;
-                b.Ellipse.Height = b.Radius * 2;
-                Canvas.SetLeft(b.Ellipse, b.Position.X - b.Radius);
-                Canvas.SetTop(b.Ellipse, b.Position.Y - b.Radius);
+                b.Update();
             }
+        }
+
+        private void RegisterBot(Bot bot)
+        {
+            botHolders.Add(new BotHolder(canvas, bot));
         }
     }
 }

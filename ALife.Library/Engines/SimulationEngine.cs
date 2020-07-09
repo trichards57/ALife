@@ -2,16 +2,14 @@
 using ALife.Serializer;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.Drawing;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Media;
 
 namespace ALife.Engines
 {
-    internal class SimulationEngine : INotifyPropertyChanged
+    public class SimulationEngine
     {
         private const int InitialRobotCount = 10;
 
@@ -24,6 +22,7 @@ namespace ALife.Engines
         [ThreadStatic]
         private static RuntimeEngine runtimeEngine;
 
+        private readonly List<Bot> botsToAdvertise = new List<Bot>();
         private readonly Timer cyclePerSecondTimer;
         private readonly Random random = new Random();
         private int cyclesLastSecond = 0;
@@ -38,40 +37,52 @@ namespace ALife.Engines
 
             for (var i = 0; i < InitialRobotCount; i++)
             {
-                Bots.Add(new Bot
+                var bot = new Bot
                 {
                     Position = new Vector2(
-                        (float)random.NextDouble() * Field.Size.X,
-                        (float)random.NextDouble() * Field.Size.Y),
+                                        (float)random.NextDouble() * Field.Size.X,
+                                        (float)random.NextDouble() * Field.Size.Y),
                     Speed = new Vector2(0, 0),
                     DNA = DNASerializer.DeserializeDNA("test-dna.txt"),
                     Orientation = (float)(random.NextDouble() * Math.PI * 2),
-                    Color = Colors.Red
-                });
+                    Color = Color.Red
+                };
+                botsToAdvertise.Add(bot);
+                Bots.Add(bot);
             }
 
             for (var i = 0; i < InitialRobotCount; i++)
             {
-                Bots.Add(new Bot
+                var bot = new Bot
                 {
                     Position = new Vector2(
-                    (float)random.NextDouble() * Field.Size.X,
-                    (float)random.NextDouble() * Field.Size.Y),
+                                    (float)random.NextDouble() * Field.Size.X,
+                                    (float)random.NextDouble() * Field.Size.Y),
                     Speed = new Vector2(0, 0),
                     DNA = DNASerializer.DeserializeDNA("test-dna-2.txt"),
                     Orientation = (float)(random.NextDouble() * Math.PI * 2),
-                    Color = Colors.Green
-                });
+                    Color = Color.Green
+                };
+                botsToAdvertise.Add(bot);
+                Bots.Add(bot);
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event EventHandler<int> CyclePerSecondChanged;
 
+        public Func<Bot, Task> AddBotCallback { get; set; }
         public List<Bot> Bots { get; } = new List<Bot>();
 
         public Func<List<Bot>, Task> CycleCallback { get; set; }
 
-        public int CyclesPerSecond { get => cyclesPerSecond; private set { cyclesPerSecond = value; RaiseOnPropertyChanged(); } }
+        public int CyclesPerSecond
+        {
+            get => cyclesPerSecond; private set
+            {
+                cyclesPerSecond = value;
+                CyclePerSecondChanged?.Invoke(this, cyclesPerSecond);
+            }
+        }
 
         public Field Field { get; } = new Field();
 
@@ -119,7 +130,14 @@ namespace ALife.Engines
 
                 cyclesLastSecond++;
 
-                await CycleCallback(Bots);
+                if (AddBotCallback != null)
+                {
+                    foreach (var b in botsToAdvertise)
+                        await AddBotCallback(b);
+                }
+                botsToAdvertise.Clear();
+                if (CycleCallback != null)
+                    await CycleCallback(Bots);
             }
 
             cyclePerSecondTimer.Change(-1, 1000);
@@ -135,11 +153,6 @@ namespace ALife.Engines
         {
             CyclesPerSecond = cyclesLastSecond;
             cyclesLastSecond = 0;
-        }
-
-        private void RaiseOnPropertyChanged([CallerMemberName] string property = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
     }
 }
