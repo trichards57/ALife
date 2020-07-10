@@ -19,9 +19,6 @@ namespace ALife.Engines
         private static DNAEngine dnaEngine;
 
         [ThreadStatic]
-        private static PhysicsEngine physicsEngine;
-
-        [ThreadStatic]
         private static RuntimeEngine runtimeEngine;
 
         private readonly List<Bot> botsToAdvertise = new List<Bot>();
@@ -63,7 +60,8 @@ namespace ALife.Engines
                     Speed = new Vector2(0, 0),
                     DNA = DNASerializer.DeserializeDNA("test-dna-2.txt"),
                     Orientation = (float)(random.NextDouble() * Math.PI * 2),
-                    Color = Color.Green
+                    Color = Color.Green,
+                    IsFixed = true
                 };
                 botsToAdvertise.Add(bot);
                 Bots.Add(bot);
@@ -116,13 +114,8 @@ namespace ALife.Engines
                     runtimeEngine.UpdateBot(b);
                 });
 
-                Parallel.ForEach(Bots, b =>
-                {
-                    if (physicsEngine == null)
-                        physicsEngine = new PhysicsEngine(Field);
-
-                    physicsEngine.UpdateBot(b);
-                });
+                var physicsEngine = new PhysicsEngine(Field);
+                physicsEngine.UpdateBot(Bots);
 
                 Parallel.ForEach(Bots, b =>
                 {

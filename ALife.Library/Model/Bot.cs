@@ -10,6 +10,7 @@ namespace ALife.Model
         public Color Color { get; set; }
         public List<BasePair> DNA { get; set; }
         public Vector2 Force { get; set; }
+        public bool IsFixed { get; set; } = false;
         public float Mass { get; set; } = 10;
         public IList<int> Memory { get; } = new int[SystemVariables.MemoryLength];
         public float Orientation { get; set; }
