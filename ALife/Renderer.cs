@@ -10,6 +10,7 @@ namespace ALife
     {
         private readonly List<BotHolder> botHolders = new List<BotHolder>();
         private readonly Canvas canvas;
+        private BotHolder selectedBot;
 
         public Renderer(Canvas canvas)
         {
@@ -26,6 +27,22 @@ namespace ALife
             await canvas.Dispatcher.BeginInvoke(new Action<IEnumerable<Bot>>(DrawBotsToCanvas), bots);
         }
 
+        private void BotClicked(object sender, EventArgs e)
+        {
+            if (sender is BotHolder bot && bot != selectedBot)
+            {
+                if (selectedBot != null)
+                {
+                    selectedBot.IsSelected = false;
+                    selectedBot.Update();
+                }
+
+                selectedBot = bot;
+                selectedBot.IsSelected = true;
+                selectedBot.Update();
+            }
+        }
+
         private void DrawBotsToCanvas(IEnumerable<Bot> bots)
         {
             foreach (var b in botHolders)
@@ -36,7 +53,9 @@ namespace ALife
 
         private void RegisterBot(Bot bot)
         {
-            botHolders.Add(new BotHolder(canvas, bot));
+            var bh = new BotHolder(canvas, bot);
+            bh.Clicked += BotClicked;
+            botHolders.Add(bh);
         }
     }
 }
