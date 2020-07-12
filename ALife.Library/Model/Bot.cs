@@ -1,23 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
 namespace ALife.Model
 {
-    public class Bot
+    public class Bot : INotifyPropertyChanged
     {
-        public Color Color { get; set; }
-        public List<BasePair> DNA { get; set; }
-        public Vector2 Force { get; set; }
-        public bool IsFixed { get; set; } = false;
-        public float Mass { get; set; } = 10;
+        private Color color;
+        private Vector2 force;
+        private bool isFixed = false;
+        private float mass = 10;
+        private float orientation;
+        private Vector2 position;
+        private float radius = 10;
+        private Vector2 speed;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public Color Color { get => color; set { color = value; RaisePropertyChanged(); } }
+        public IList<BasePair> DNA { get; set; }
+        public Vector2 Force { get => force; set { force = value; RaisePropertyChanged(); } }
+        public bool IsFixed { get => isFixed; set { isFixed = value; RaisePropertyChanged(); } }
+        public float Mass { get => mass; set { mass = value; RaisePropertyChanged(); } }
         public IList<int> Memory { get; } = new int[SystemVariables.MemoryLength];
-        public float Orientation { get; set; }
-        public Vector2 Position { get; set; }
+        public float Orientation { get => orientation; set { orientation = value; RaisePropertyChanged(); } }
+        public Vector2 Position { get => position; set { position = value; RaisePropertyChanged(); } }
         public IReadOnlyList<int> PreviousMemory { get; private set; }
-        public float Radius { get; set; } = 10;
-        public Vector2 Speed { get; set; }
+        public float Radius { get => radius; set { radius = value; RaisePropertyChanged(); } }
+        public Vector2 Speed { get => speed; set { speed = value; RaisePropertyChanged(); } }
 
         public int GetFromMemory(MemoryAddresses address)
         {
@@ -32,6 +45,11 @@ namespace ALife.Model
         public void SetMemory(MemoryAddresses address, float value)
         {
             Memory[(int)address] = (int)Math.Round(value);
+        }
+
+        private void RaisePropertyChanged([CallerMemberName] string name = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }
