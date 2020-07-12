@@ -2,9 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Controls;
+using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
 
-namespace ALife
+namespace ALife.App
 {
     public class Renderer
     {
@@ -17,29 +18,40 @@ namespace ALife
             this.canvas = canvas;
         }
 
+        public event EventHandler SelectedBotChanged;
+
+        public BotHolder SelectedBot
+        {
+            get => selectedBot; set
+            {
+                selectedBot = value;
+                var _ = canvas.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => SelectedBotChanged?.Invoke(this, EventArgs.Empty));
+            }
+        }
+
         public async Task AddBot(Bot bot)
         {
-            await canvas.Dispatcher.BeginInvoke(new Action<Bot>(RegisterBot), bot);
+            await canvas.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => RegisterBot(bot));
         }
 
         public async Task DrawBots(IEnumerable<Bot> bots)
         {
-            await canvas.Dispatcher.BeginInvoke(new Action<IEnumerable<Bot>>(DrawBotsToCanvas), bots);
+            await canvas.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => DrawBotsToCanvas(bots));
         }
 
         private void BotClicked(object sender, EventArgs e)
         {
-            if (sender is BotHolder bot && bot != selectedBot)
+            if (sender is BotHolder bot && bot != SelectedBot)
             {
-                if (selectedBot != null)
+                if (SelectedBot != null)
                 {
-                    selectedBot.IsSelected = false;
-                    selectedBot.Update();
+                    SelectedBot.IsSelected = false;
+                    SelectedBot.Update();
                 }
 
-                selectedBot = bot;
-                selectedBot.IsSelected = true;
-                selectedBot.Update();
+                SelectedBot = bot;
+                SelectedBot.IsSelected = true;
+                SelectedBot.Update();
             }
         }
 

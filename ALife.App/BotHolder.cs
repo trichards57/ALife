@@ -1,12 +1,13 @@
 ﻿using ALife.Model;
 using System;
-using System.ComponentModel;
-using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Shapes;
+using Windows.UI;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Shapes;
 
-namespace ALife
+namespace ALife.App
 {
     public class BotHolder
     {
@@ -18,14 +19,13 @@ namespace ALife
             Bot = bot;
             ellipse = new Ellipse
             {
-                Stroke = Brushes.Black,
+                Stroke = new SolidColorBrush(Colors.Black),
                 StrokeThickness = 1,
             };
-            ellipse.MouseLeftButtonUp += BotClicked;
+            ellipse.Tapped += BotClicked;
 
             line = new Line
             {
-                Stroke = Brushes.Black,
                 StrokeThickness = 2
             };
 
@@ -35,11 +35,9 @@ namespace ALife
 
         public event EventHandler Clicked;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
         public Bot Bot { get; }
 
-        public SolidColorBrush Color => new SolidColorBrush(System.Windows.Media.Color.FromArgb(Bot.Color.A, Bot.Color.R, Bot.Color.G, Bot.Color.B));
+        public SolidColorBrush Color => new SolidColorBrush(Windows.UI.Color.FromArgb(Bot.Color.A, Bot.Color.R, Bot.Color.G, Bot.Color.B));
 
         public bool IsSelected { get; set; }
 
@@ -51,6 +49,13 @@ namespace ALife
             Canvas.SetLeft(ellipse, Bot.Position.X - Bot.Radius);
             Canvas.SetTop(ellipse, Bot.Position.Y - Bot.Radius);
 
+            var outlineColor = Colors.Black;
+
+            if (App.Current.RequestedTheme == ApplicationTheme.Dark)
+                outlineColor = Colors.White;
+
+            line.Stroke = new SolidColorBrush(outlineColor);
+
             if (IsSelected)
             {
                 var col = GetColor(((Bot.Color.GetHue() + 180) % 360) / 360, Bot.Color.GetSaturation(), Bot.Color.GetBrightness());
@@ -59,7 +64,7 @@ namespace ALife
             }
             else
             {
-                ellipse.Stroke = Brushes.Black;
+                ellipse.Stroke = new SolidColorBrush(outlineColor);
                 ellipse.StrokeThickness = 2;
             }
 
@@ -67,11 +72,13 @@ namespace ALife
             line.Y1 = Bot.Position.Y;
             line.X2 = Bot.Position.X + Bot.Radius * Math.Cos(Bot.Orientation);
             line.Y2 = Bot.Position.Y + Bot.Radius * Math.Sin(Bot.Orientation);
+            line.IsTapEnabled = true;
         }
 
-        private void BotClicked(object sender, MouseButtonEventArgs e)
+        private void BotClicked(object sender, TappedRoutedEventArgs e)
         {
             Clicked?.Invoke(this, EventArgs.Empty);
+            e.Handled = true;
         }
 
         private Color GetColor(float h, float s, float l, float a = 1.0f)
@@ -143,7 +150,7 @@ namespace ALife
                 }
             }
 
-            return System.Windows.Media.Color.FromArgb((byte)(a * 255.0f), (byte)(r * 255.0f), (byte)(g * 255.0f), (byte)(b * 255.0f));
+            return Windows.UI.Color.FromArgb((byte)(a * 255.0f), (byte)(r * 255.0f), (byte)(g * 255.0f), (byte)(b * 255.0f));
         }
     }
 }
