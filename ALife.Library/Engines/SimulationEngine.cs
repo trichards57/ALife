@@ -28,7 +28,7 @@ namespace ALife.Engines
         private int cyclesPerSecond;
         private bool shouldStop = false;
 
-        public SimulationEngine()
+        public SimulationEngine(Func<Action, Task> invokeEvent = null)
         {
             cyclePerSecondTimer = new Timer(CyclePerSecondTick, null, -1, 1000);
 
@@ -36,11 +36,9 @@ namespace ALife.Engines
 
             for (var i = 0; i < InitialRobotCount; i++)
             {
-                var bot = new Bot
+                var bot = new Bot(invokeEvent)
                 {
-                    Position = new Vector2(
-                                        (float)random.NextDouble() * Field.Size.X,
-                                        (float)random.NextDouble() * Field.Size.Y),
+                    Position = new Vector2((float)random.NextDouble() * Field.Size.X, (float)random.NextDouble() * Field.Size.Y),
                     Speed = new Vector2(0, 0),
                     DNA = DNASerializer.DeserializeDNA("test-dna.txt"),
                     Orientation = (float)(random.NextDouble() * Math.PI * 2),
@@ -52,7 +50,7 @@ namespace ALife.Engines
 
             for (var i = 0; i < InitialRobotCount; i++)
             {
-                var bot = new Bot
+                var bot = new Bot(invokeEvent)
                 {
                     Position = new Vector2(
                                     (float)random.NextDouble() * Field.Size.X,

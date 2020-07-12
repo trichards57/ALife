@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace ALife.Model
 {
     public class Bot : INotifyPropertyChanged
     {
+        private readonly Func<Action, Task> invokeEvent;
         private Color color;
         private Vector2 force;
         private bool isFixed = false;
@@ -17,6 +19,11 @@ namespace ALife.Model
         private Vector2 position;
         private float radius = 10;
         private Vector2 speed;
+
+        public Bot(Func<Action, Task> invokeEvent = null)
+        {
+            this.invokeEvent = invokeEvent;
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -49,7 +56,10 @@ namespace ALife.Model
 
         private void RaisePropertyChanged([CallerMemberName] string name = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+            if (invokeEvent != null)
+                invokeEvent(() => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name)));
+            else
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }
 }
