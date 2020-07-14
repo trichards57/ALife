@@ -1,7 +1,9 @@
-﻿using System;
+﻿using ALife.Library.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -10,8 +12,13 @@ namespace ALife.Model
 {
     public class Bot : INotifyPropertyChanged
     {
+        public const float EyeAngle = 10 * (float)Math.PI / 360;
+        public const int EyeCount = 3;
+        public const int VisionLimit = 200;
+
         private readonly Func<Action, Task> invokeEvent;
         private Color color;
+        private IReadOnlyList<float> eyeDistances = new float[EyeCount];
         private Vector2 force;
         private bool isFixed = false;
         private float mass = 10;
@@ -29,6 +36,8 @@ namespace ALife.Model
 
         public Color Color { get => color; set { color = value; RaisePropertyChanged(); } }
         public IList<BasePair> DNA { get; set; }
+        public IReadOnlyList<float> EyeDistances { get => eyeDistances; internal set { eyeDistances = value; RaisePropertyChanged(); } }
+        public IReadOnlyList<IList<EyeEntry>> Eyes { get; } = new List<IList<EyeEntry>>(Enumerable.Range(0, EyeCount).Select(i => new List<EyeEntry>()));
         public Vector2 Force { get => force; set { force = value; RaisePropertyChanged(); } }
         public bool IsFixed { get => isFixed; set { isFixed = value; RaisePropertyChanged(); } }
         public float Mass { get => mass; set { mass = value; RaisePropertyChanged(); } }

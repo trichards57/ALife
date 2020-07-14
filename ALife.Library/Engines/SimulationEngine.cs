@@ -19,6 +19,9 @@ namespace ALife.Engines
         private static DNAEngine dnaEngine;
 
         [ThreadStatic]
+        private static PhysicsEngine physicsEngine;
+
+        [ThreadStatic]
         private static RuntimeEngine runtimeEngine;
 
         private readonly List<Bot> botsToAdvertise = new List<Bot>();
@@ -84,10 +87,13 @@ namespace ALife.Engines
 
         public Field Field { get; } = new Field();
 
-        public bool IsStopped { get; set; }
+        public bool IsStopped { get; set; } = true;
 
         public async Task RunCycle()
         {
+            if (!IsStopped)
+                return;
+
             shouldStop = false;
             IsStopped = false;
             cyclePerSecondTimer.Change(0, 1000);
@@ -112,7 +118,9 @@ namespace ALife.Engines
                     runtimeEngine.UpdateBot(b);
                 });
 
-                var physicsEngine = new PhysicsEngine(Field);
+                if (physicsEngine == null)
+                    physicsEngine = new PhysicsEngine(Field);
+
                 physicsEngine.UpdateBot(Bots);
 
                 Parallel.ForEach(Bots, b =>
@@ -120,6 +128,7 @@ namespace ALife.Engines
                     if (runtimeEngine == null)
                         runtimeEngine = new RuntimeEngine();
 
+                    runtimeEngine.UpdateVision(b, Bots);
                     runtimeEngine.UpdateMemory(b);
                 });
 

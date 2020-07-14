@@ -34,6 +34,9 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock Margin="2" Grid.Row="0" Grid.Column="0">Position</TextBlock>
                 <TextBlock Margin="2" Grid.Row="0" Grid.Column="1" Text="{Binding SelectedBot.Bot.Position}" />
@@ -45,6 +48,10 @@
                 <TextBlock Margin="2" Grid.Row="3" Grid.Column="1" Text="{Binding SelectedBot.Bot.Radius}" />
                 <TextBlock Margin="2" Grid.Row="4" Grid.Column="0">Is Fixed</TextBlock>
                 <TextBlock Margin="2" Grid.Row="4" Grid.Column="1" Text="{Binding SelectedBot.Bot.IsFixed}" />
+                <TextBlock Margin="2" Grid.Row="5" Grid.Column="0">Eye Distance</TextBlock>
+                <TextBlock Margin="2" Grid.Row="5" Grid.Column="1" Text="{Binding SelectedBot.Bot.EyeDistances[0]}" />
+                <TextBlock Margin="2" Grid.Row="6" Grid.Column="1" Text="{Binding SelectedBot.Bot.EyeDistances[1]}" />
+                <TextBlock Margin="2" Grid.Row="7" Grid.Column="1" Text="{Binding SelectedBot.Bot.EyeDistances[2]}" />
             </Grid>
         </StackPanel>
         <Viewbox Stretch="Fill">
