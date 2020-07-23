@@ -17,8 +17,19 @@ namespace ALife.Model
                 {"right", (int)MemoryAddresses.MoveRight },
                 {"turnleft", (int)MemoryAddresses.TurnLeft },
                 {"turnright", (int)MemoryAddresses.TurnRight },
+                {"speed", (int)MemoryAddresses.Speed },
                 {"speedfwd", (int)MemoryAddresses.SpeedForward },
                 {"speedright", (int)MemoryAddresses.SpeedRight },
+                {"eye1", (int)MemoryAddresses.Eye1 },
+                {"eye2", (int)MemoryAddresses.Eye2 },
+                {"eye3", (int)MemoryAddresses.Eye3 },
+                {"eye4", (int)MemoryAddresses.Eye4 },
+                {"eye5", (int)MemoryAddresses.Eye5 },
+                {"eye6", (int)MemoryAddresses.Eye6 },
+                {"eye7", (int)MemoryAddresses.Eye7 },
+                {"fbotdist", (int)MemoryAddresses.FocusBotDistance },
+                {"fboteyes", (int)MemoryAddresses.FocusBotEyeRefCount },
+                {"myeyes", (int)MemoryAddresses.MyEyeRefCount }
             };
 
         public static bool IsAddressWritable(int address)

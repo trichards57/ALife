@@ -7,15 +7,47 @@ start
 stop
 
 cond
-  *.speedright 1 >
-  *.speedfwd 0 > and
+  *.speedright 0 >
+  *.speedfwd 0 >
 start
   10 .turnright store
 stop
 
 cond
-  *.speedright -1 < 
+  *.speedright 0 < 
   *.speedfwd 0 < or
 start
   10 .turnleft store
+stop
+
+cond
+  *.speedright 0 =
+  *.speedleft 0 = 
+  *.speedfwd 0 >
+  *.speedfwd 10 <
+start
+  10 .up store
+stop
+
+cond
+  *.speedright 0 =
+  *.speedleft 0 = 
+  *.speedfwd 10 >
+start
+  10 .down store
+stop
+
+cond
+  *.fbotdist 0 >
+  *.fboteyes *.myeyes !=
+start
+  0 .turnright store
+  0 .turnleft store
+stop
+
+cond
+  *.fbotdist 5 >
+  *.fboteyes *.myeyes !=
+start
+  *.speedfwd .down store
 stop
