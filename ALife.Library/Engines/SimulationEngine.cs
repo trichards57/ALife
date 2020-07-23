@@ -21,9 +21,6 @@ namespace ALife.Engines
         [ThreadStatic]
         private static PhysicsEngine physicsEngine;
 
-        [ThreadStatic]
-        private static RuntimeEngine runtimeEngine;
-
         private readonly List<Bot> botsToAdvertise = new List<Bot>();
         private readonly Timer cyclePerSecondTimer;
         private readonly Random random = new Random();
@@ -112,10 +109,7 @@ namespace ALife.Engines
 
                 Parallel.ForEach(Bots, b =>
                 {
-                    if (runtimeEngine == null)
-                        runtimeEngine = new RuntimeEngine();
-
-                    runtimeEngine.UpdateBot(b);
+                    RuntimeEngine.UpdateBot(b);
                 });
 
                 if (physicsEngine == null)
@@ -125,11 +119,8 @@ namespace ALife.Engines
 
                 Parallel.ForEach(Bots, b =>
                 {
-                    if (runtimeEngine == null)
-                        runtimeEngine = new RuntimeEngine();
-
-                    runtimeEngine.UpdateVision(b, Bots);
-                    runtimeEngine.UpdateMemory(b);
+                    RuntimeEngine.UpdateVision(b, Bots);
+                    RuntimeEngine.UpdateMemory(b);
                 });
 
                 cyclesLastSecond++;
