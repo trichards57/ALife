@@ -2,9 +2,11 @@
 using System;
 using System.ComponentModel;
 using System.Threading.Tasks;
+using Windows.Foundation;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -32,6 +34,7 @@ namespace ALife.App
             engine.CyclePerSecondChanged += Engine_CyclePerSecondChanged;
             MainCanvas.Width = engine.Field.Size.X;
             MainCanvas.Height = engine.Field.Size.Y;
+            MainCanvas.Clip = new RectangleGeometry() { Rect = new Rect(0, 0, engine.Field.Size.X, engine.Field.Size.Y) };
             DataContext = this;
         }
 
