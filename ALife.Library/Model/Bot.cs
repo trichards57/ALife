@@ -8,6 +8,8 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
+[assembly: InternalsVisibleTo("ALife.Tests")]
+
 namespace ALife.Model
 {
     public class Bot : INotifyPropertyChanged
@@ -70,9 +72,9 @@ namespace ALife.Model
         public Vector2 RelativeSpeed => relativeSpeed;
         public Vector2 Speed { get => speed; set { speed = value; RaisePropertyChanged(); RaisePropertyChanged(nameof(RelativeSpeed)); RaisePropertyChanged(nameof(FocussedBotRelativeSpeed)); } }
 
-        public int GetFromMemory(MemoryAddresses address)
+        public int GetFromMemory(MemoryAddresses address, int offset = 0)
         {
-            return Memory[(int)address];
+            return Memory[(int)address + offset];
         }
 
         public void SetMemory(MemoryAddresses address, int value)
