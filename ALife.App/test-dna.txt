@@ -46,7 +46,7 @@ start
 stop
 
 cond
-  *.fbotdist 5 >
+  *.eye3 5 >
   *.fboteyes *.myeyes !=
 start
   *.speedfwd .down store

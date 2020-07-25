@@ -1,5 +1,6 @@
 ﻿using ALife.Engines;
 using ALife.Model;
+using FluentAssertions;
 using System;
 using System.Numerics;
 using Xunit;
@@ -27,11 +28,10 @@ namespace ALife.Tests.Engines
             bot.SetMemory(MemoryAddresses.MoveDown, testDown);
             bot.SetMemory(MemoryAddresses.MoveUp, testUp);
 
-            var engine = new RuntimeEngine();
-            engine.UpdateBot(bot);
+            RuntimeEngine.UpdateBot(bot);
 
-            Assert.Equal(testUp - testDown, bot.Force.X);
-            Assert.Equal(testRight - testLeft, bot.Force.Y);
+            bot.Force.X.Should().Be(testUp - testDown);
+            bot.Force.Y.Should().Be(testRight - testLeft);
         }
 
         [Fact]
@@ -48,10 +48,9 @@ namespace ALife.Tests.Engines
             bot.SetMemory(MemoryAddresses.TurnLeft, turnLeft);
             bot.SetMemory(MemoryAddresses.TurnRight, turnRight + 3000);
 
-            var engine = new RuntimeEngine();
-            engine.UpdateBot(bot);
+            RuntimeEngine.UpdateBot(bot);
 
-            Assert.Equal(Helpers.IntToAngle(turnRight - turnLeft), bot.Orientation, 3);
+            bot.Orientation.Should().BeApproximately(Helpers.IntToAngle(turnRight - turnLeft), 3);
         }
 
         [Fact]
@@ -68,11 +67,10 @@ namespace ALife.Tests.Engines
 
             bot.SetMemory(MemoryAddresses.MoveUp, testX);
 
-            var engine = new RuntimeEngine();
-            engine.UpdateBot(bot);
+            RuntimeEngine.UpdateBot(bot);
 
-            Assert.Equal(testX * Math.Cos(testAngle), bot.Force.X, 3);
-            Assert.Equal(testX * Math.Sin(testAngle), bot.Force.Y, 3);
+            bot.Force.X.Should().BeApproximately(testX * (float)Math.Cos(testAngle), 3);
+            bot.Force.Y.Should().BeApproximately(testX * (float)Math.Sin(testAngle), 3);
         }
 
         [Fact]
@@ -89,10 +87,9 @@ namespace ALife.Tests.Engines
             bot.SetMemory(MemoryAddresses.TurnLeft, turnLeft);
             bot.SetMemory(MemoryAddresses.TurnRight, turnRight);
 
-            var engine = new RuntimeEngine();
-            engine.UpdateBot(bot);
+            RuntimeEngine.UpdateBot(bot);
 
-            Assert.Equal(Helpers.IntToAngle(turnRight - turnLeft), bot.Orientation, 3);
+            bot.Orientation.Should().BeApproximately(Helpers.IntToAngle(turnRight - turnLeft), 3);
         }
 
         [Fact]
@@ -106,15 +103,14 @@ namespace ALife.Tests.Engines
             bot.SetMemory(MemoryAddresses.TurnLeft, 5);
             bot.SetMemory(MemoryAddresses.TurnRight, 6);
 
-            var engine = new RuntimeEngine();
-            engine.UpdateMemory(bot);
+            RuntimeEngine.UpdateMemory(bot);
 
-            Assert.Equal(0, bot.GetFromMemory(MemoryAddresses.MoveDown));
-            Assert.Equal(0, bot.GetFromMemory(MemoryAddresses.MoveUp));
-            Assert.Equal(0, bot.GetFromMemory(MemoryAddresses.MoveLeft));
-            Assert.Equal(0, bot.GetFromMemory(MemoryAddresses.MoveRight));
-            Assert.Equal(0, bot.GetFromMemory(MemoryAddresses.TurnLeft));
-            Assert.Equal(0, bot.GetFromMemory(MemoryAddresses.TurnRight));
+            bot.GetFromMemory(MemoryAddresses.MoveDown).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.MoveUp).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.MoveLeft).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.MoveRight).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.TurnLeft).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.TurnRight).Should().Be(0);
         }
 
         [Fact]
@@ -129,27 +125,29 @@ namespace ALife.Tests.Engines
                 Speed = new Vector2(testX, 0)
             };
 
-            var engine = new RuntimeEngine();
-            engine.UpdateMemory(bot);
+            RuntimeEngine.UpdateMemory(bot);
 
-            Assert.Equal(testX * Math.Cos(testAngle), bot.GetFromMemory(MemoryAddresses.SpeedForward), 0);
-            Assert.Equal(-testX * Math.Sin(testAngle), bot.GetFromMemory(MemoryAddresses.SpeedRight), 0);
+            bot.GetFromMemory(MemoryAddresses.SpeedForward).Should().Be((int)Math.Round(testX * Math.Cos(testAngle)));
+            bot.GetFromMemory(MemoryAddresses.SpeedRight).Should().Be((int)Math.Round(-testX * Math.Sin(testAngle)));
         }
 
         [Fact]
         public void UpdateMemoryUpdatesStateMemory()
         {
+            const int TestForward = 3;
+            const int TestRight = 4;
+            const int TestSpeed = 5;
+
             var bot = new Bot()
             {
                 Orientation = 0,
-                Speed = new Vector2(1, 2)
+                Speed = new Vector2(TestForward, TestRight)
             };
 
-            var engine = new RuntimeEngine();
-            engine.UpdateMemory(bot);
-
-            Assert.Equal(1, bot.GetFromMemory(MemoryAddresses.SpeedForward));
-            Assert.Equal(2, bot.GetFromMemory(MemoryAddresses.SpeedRight));
+            RuntimeEngine.UpdateMemory(bot);
+            bot.GetFromMemory(MemoryAddresses.Speed).Should().Be(TestSpeed);
+            bot.GetFromMemory(MemoryAddresses.SpeedRight).Should().Be(TestRight);
+            bot.GetFromMemory(MemoryAddresses.SpeedForward).Should().Be(TestForward);
         }
     }
 }

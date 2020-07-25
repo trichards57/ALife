@@ -20,7 +20,7 @@ namespace ALife.Engines
                 bot.GetFromMemory(MemoryAddresses.MoveUp) - bot.GetFromMemory(MemoryAddresses.MoveDown),
                 bot.GetFromMemory(MemoryAddresses.MoveRight) - bot.GetFromMemory(MemoryAddresses.MoveLeft));
 
-            var rotation = Matrix4x4.CreateRotationZ(bot.Orientation);
+            var rotation = Matrix3x2.CreateRotation(bot.Orientation);
 
             bot.Force += Vector2.Transform(netForce, rotation);
         }

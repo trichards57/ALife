@@ -52,7 +52,7 @@ namespace ALife.Model
         public event PropertyChangedEventHandler PropertyChanged;
 
         public Color Color { get => color; set { color = value; RaisePropertyChanged(); } }
-        public IList<BasePair> DNA { get; set; }
+        public IList<BasePair> DNA { get; set; } = new List<BasePair>();
         public IReadOnlyList<float> EyeDistances { get => eyeDistances; internal set { eyeDistances = value; RaisePropertyChanged(); } }
         public int EyeRefCount => DNA.Count(bp => bp.Type == BasePairType.StarNumber && bp.Command >= (int)MemoryAddresses.EyeFirst && bp.Command <= (int)MemoryAddresses.EyeLast);
         public IReadOnlyList<IList<EyeEntry>> Eyes { get; } = new List<IList<EyeEntry>>(Enumerable.Range(0, EyeCount).Select(i => new List<EyeEntry>()));
