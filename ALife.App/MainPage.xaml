@@ -43,6 +43,7 @@
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <TextBlock Margin="2" Grid.Row="0" Grid.Column="0">Position</TextBlock>
                 <TextBlock Margin="2" Grid.Row="0" Grid.Column="1" Text="{Binding SelectedBot.Bot.Position}" />
@@ -64,8 +65,10 @@
                 <TextBlock Margin="2" Grid.Row="10" Grid.Column="1" Text="{Binding SelectedBot.Bot.EyeDistances[4]}" />
                 <TextBlock Margin="2" Grid.Row="11" Grid.Column="1" Text="{Binding SelectedBot.Bot.EyeDistances[5]}" />
                 <TextBlock Margin="2" Grid.Row="12" Grid.Column="1" Text="{Binding SelectedBot.Bot.EyeDistances[6]}" />
-                <TextBlock Margin="2" Grid.Row="13" Grid.Column="1" Text="{Binding SelectedBot.Bot.FocussedBotRelativeSpeed}" />
                 <TextBlock Margin="2" Grid.Row="13" Grid.Column="0">Relative Speed</TextBlock>
+                <TextBlock Margin="2" Grid.Row="13" Grid.Column="1" Text="{Binding SelectedBot.Bot.FocussedBotRelativeSpeed}" />
+                <TextBlock Margin="2" Grid.Row="14" Grid.Column="0">Eye Ref Count</TextBlock>
+                <TextBlock Margin="2" Grid.Row="14" Grid.Column="1" Text="{Binding SelectedBot.Bot.EyeRefCount}" />
             </Grid>
         </StackPanel>
         <Viewbox Stretch="Fill">
