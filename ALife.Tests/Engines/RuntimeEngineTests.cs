@@ -93,6 +93,21 @@ namespace ALife.Tests.Engines
         }
 
         [Fact]
+        public void UpdateMemoryClearsFocusBotMemoryWhenNone()
+        {
+            var bot = new Bot
+            {
+                FocussedBot = null
+            };
+
+            bot.GetFromMemory(MemoryAddresses.FocusBotDistance).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.FocusBotSpeed).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.FocusBotSpeedForward).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.FocusBotSpeedRight).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.FocusBotEyeRefCount).Should().Be(0);
+        }
+
+        [Fact]
         public void UpdateMemoryClearsUserMemory()
         {
             var bot = new Bot();
@@ -111,6 +126,77 @@ namespace ALife.Tests.Engines
             bot.GetFromMemory(MemoryAddresses.MoveRight).Should().Be(0);
             bot.GetFromMemory(MemoryAddresses.TurnLeft).Should().Be(0);
             bot.GetFromMemory(MemoryAddresses.TurnRight).Should().Be(0);
+        }
+
+        [Fact]
+        public void UpdateMemorySetFocusBotMemoryWhenPresent()
+        {
+            const int TestForward = 3;
+            const int TestRight = 4;
+
+            var bot = new Bot
+            {
+                Orientation = 0,
+                FocussedBot = new Bot
+                {
+                    Speed = new Vector2(TestForward, TestRight),
+                    DNA = new[] { new BasePair(BasePairType.StarNumber, (int)MemoryAddresses.Eye1) }
+                }
+            };
+
+            RuntimeEngine.UpdateMemory(bot);
+
+            bot.GetFromMemory(MemoryAddresses.FocusBotSpeed).Should().Be((int)Math.Round(bot.FocussedBotRelativeSpeed.Length()));
+            bot.GetFromMemory(MemoryAddresses.FocusBotSpeedForward).Should().Be((int)Math.Round(bot.FocussedBotRelativeSpeed.X));
+            bot.GetFromMemory(MemoryAddresses.FocusBotSpeedRight).Should().Be((int)Math.Round(bot.FocussedBotRelativeSpeed.Y));
+            bot.GetFromMemory(MemoryAddresses.FocusBotEyeRefCount).Should().Be(1);
+        }
+
+        [Fact]
+        public void UpdateMemorySetsBotEyes()
+        {
+            var testArray = new float[Bot.EyeCount];
+
+            for (var i = 0; i < Bot.EyeCount; i++)
+                testArray[i] = i * 3.2f;
+
+            var bot = new Bot
+            {
+                EyeDistances = testArray
+            };
+
+            RuntimeEngine.UpdateMemory(bot);
+
+            for (var i = 0; i < Bot.EyeCount; i++)
+                bot.GetFromMemory(MemoryAddresses.EyeFirst, i).Should().Be((int)Math.Round(testArray[i]));
+        }
+
+        [Fact]
+        public void UpdateMemorySetsEyeRefCount()
+        {
+            var bot = new Bot
+            {
+                DNA = new[] {
+                    new BasePair(BasePairType.StarNumber, (int)MemoryAddresses.Eye1),
+                    new BasePair(BasePairType.StarNumber, (int)MemoryAddresses.Eye2),
+                    new BasePair(BasePairType.StarNumber, (int)MemoryAddresses.Eye3),
+                    new BasePair(BasePairType.StarNumber, (int)MemoryAddresses.Eye4),
+                    new BasePair(BasePairType.StarNumber, (int)MemoryAddresses.Eye5),
+                    new BasePair(BasePairType.StarNumber, (int)MemoryAddresses.Eye6),
+                    new BasePair(BasePairType.StarNumber, (int)MemoryAddresses.Eye7),
+                    new BasePair(BasePairType.Number, (int)MemoryAddresses.Eye1),
+                    new BasePair(BasePairType.Basic, (int)MemoryAddresses.Eye2),
+                    new BasePair(BasePairType.Boolean, (int)MemoryAddresses.Eye3),
+                    new BasePair(BasePairType.Condition, (int)MemoryAddresses.Eye4),
+                    new BasePair(BasePairType.Flow, (int)MemoryAddresses.Eye5),
+                    new BasePair(BasePairType.Store, (int)MemoryAddresses.Eye6),
+                    new BasePair(BasePairType.Unknown, (int)MemoryAddresses.Eye7),
+                }
+            };
+
+            RuntimeEngine.UpdateMemory(bot);
+
+            bot.GetFromMemory(MemoryAddresses.MyEyeRefCount).Should().Be(7);
         }
 
         [Fact]
@@ -148,6 +234,10 @@ namespace ALife.Tests.Engines
             bot.GetFromMemory(MemoryAddresses.Speed).Should().Be(TestSpeed);
             bot.GetFromMemory(MemoryAddresses.SpeedRight).Should().Be(TestRight);
             bot.GetFromMemory(MemoryAddresses.SpeedForward).Should().Be(TestForward);
+            for (var i = 0; i < Bot.EyeCount; i++)
+                bot.GetFromMemory(MemoryAddresses.EyeFirst, i).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.FocusBotDistance).Should().Be(0);
+            bot.GetFromMemory(MemoryAddresses.MyEyeRefCount).Should().Be(0);
         }
     }
 }
