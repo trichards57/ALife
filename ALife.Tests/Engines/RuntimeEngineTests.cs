@@ -1,4 +1,5 @@
 ﻿using ALife.Engines;
+using ALife.Helpers;
 using ALife.Model;
 using FluentAssertions;
 using System;
@@ -50,7 +51,7 @@ namespace ALife.Tests.Engines
 
             RuntimeEngine.UpdateBot(bot);
 
-            bot.Orientation.Should().BeApproximately(Helpers.IntToAngle(turnRight - turnLeft), 3);
+            bot.Orientation.Should().BeApproximately(AngleHelper.IntToAngle(turnRight - turnLeft), 3);
         }
 
         [Fact]
@@ -89,7 +90,7 @@ namespace ALife.Tests.Engines
 
             RuntimeEngine.UpdateBot(bot);
 
-            bot.Orientation.Should().BeApproximately(Helpers.IntToAngle(turnRight - turnLeft), 3);
+            bot.Orientation.Should().BeApproximately(AngleHelper.IntToAngle(turnRight - turnLeft), 3);
         }
 
         [Fact]

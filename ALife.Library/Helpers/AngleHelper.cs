@@ -1,19 +1,19 @@
 ﻿using System;
 
-namespace ALife.Engines
+namespace ALife.Helpers
 {
-    public class Helpers
+    public static class AngleHelper
     {
-        public static float RadianPerInt = (float)(Math.PI * 2 / 1000);
+        public static double RadianPerInt = (Math.PI * 2 / 1000);
 
-        public static float AngleToInt(float angle)
+        public static int AngleToInt(float angle)
         {
-            return angle / RadianPerInt;
+            return (int)(angle / RadianPerInt);
         }
 
         public static float IntToAngle(int angle)
         {
-            return angle * RadianPerInt;
+            return (float)(angle * RadianPerInt);
         }
 
         public static float NormaliseAngle(float angle)

@@ -1,4 +1,5 @@
-﻿using ALife.Library.Model;
+﻿using ALife.Helpers;
+using ALife.Library.Model;
 using ALife.Model;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace ALife.Engines
 
         public static void UpdateBot(Bot bot)
         {
-            bot.Orientation = Helpers.NormaliseAngle(bot.Orientation + Helpers.IntToAngle(bot.Memory[(int)MemoryAddresses.TurnRight] - bot.Memory[(int)MemoryAddresses.TurnLeft]));
+            bot.Orientation = AngleHelper.NormaliseAngle(bot.Orientation + AngleHelper.IntToAngle(bot.Memory[(int)MemoryAddresses.TurnRight] - bot.Memory[(int)MemoryAddresses.TurnLeft]));
 
             // Right and down are positive x and y respectively
             var netForce = new Vector2(
@@ -75,7 +76,7 @@ namespace ALife.Engines
                 {
                     // Take the bearing to the centre of the other bot
                     var angleToOtherBot = (float)Math.Atan2(distanceVector.Y, distanceVector.X);
-                    var relativeAngle = Helpers.NormaliseAngle(angleToOtherBot - bot.Orientation);
+                    var relativeAngle = AngleHelper.NormaliseAngle(angleToOtherBot - bot.Orientation);
                     // Translate to within -pi to +pi (move the discontinuity to outside the edges of vision)
                     if (relativeAngle > Math.PI)
                         relativeAngle -= 2 * (float)Math.PI;
